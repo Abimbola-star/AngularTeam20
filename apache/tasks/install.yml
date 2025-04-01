@@ -4,7 +4,7 @@
     name: apache2
     state: present
     
-- name: Install Apache2
+- name: Install git
   apt:
     name: git
     state: present
