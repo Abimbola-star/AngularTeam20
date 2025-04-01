@@ -1,2 +1,4 @@
 ---
 # tasks file for angular
+-import_tasks: install.yml
+-import_tasks: config.yml

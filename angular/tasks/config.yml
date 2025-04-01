@@ -1,0 +1,29 @@
+---
+- name: Remove the default Apache site
+  file:
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+  become: true
+
+- name: Configure Apache virtual host for Angular app
+  template:
+    src: apache_virtualhost.conf.j2
+    dest: /etc/apache2/sites-available/angular-devops-app.conf
+  become: true
+
+- name: Enable new Apache site
+  command: a2ensite angular-devops-app.conf
+  become: true
+
+- name: Enable Apache rewrite module
+  apache2_module:
+    name: rewrite
+    state: present
+  become: true
+
+- name: Restart Apache to apply changes
+  service:
+    name: apache2
+    state: restarted
+  become: true
+...

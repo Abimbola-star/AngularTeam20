@@ -1,0 +1,7 @@
+---
+- name: configure apache server
+  hosts: g1
+  become: yes
+  roles:
+   - apache
+...

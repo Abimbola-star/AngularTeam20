@@ -1,0 +1,11 @@
+---
+- name: Install Apache2
+  apt:
+    name: apache2
+    state: present
+    
+- name: Install Apache2
+  apt:
+    name: git
+    state: present
+...
