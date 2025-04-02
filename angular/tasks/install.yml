@@ -18,13 +18,14 @@
   args: 
     chdir: /var/www/angular-devops-app
 
-- name: Copy built angular files to apache directory
-  copy:
+- name: Copy built Angular files to Apache document root
+  synchronize:
     src: /var/www/angular-devops-app/dist/
-    dest: /var/www/html/
+    dest: /var/www/html/  
+    mode: push
+    recursive: yes
     owner: www-data
     group: www-data
     mode: '0755'
-  recurse: yes
-  become: true
+    become: true
 ...
