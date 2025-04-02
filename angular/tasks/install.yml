@@ -1,7 +1,7 @@
 ---
 - name: Ensure the angular project directory exists
   synchronize:
-    src: src/app
+    src: my-angular-app
     dest: /var/www/angular-devops-app
     mode: push
     recursive: yes
@@ -19,6 +19,11 @@
    name: "@angular/cli@16"
    global: yes
    state: present
+
+- name: Install project dependencies (npm install)
+  command: npm install
+  args:
+    chdir: /var/www/angular-devops-app/
 
 - name: Build the Angular project for production
   command: ng build --prod
