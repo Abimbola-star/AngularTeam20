@@ -26,7 +26,7 @@
     chdir: /var/www/angular-devops-app/
 
 - name: Build the Angular project for production
-  command: ng build --prod
+  command: ng build --configuration production
   args:
     chdir: /var/www/angular-devops-app/ 
 
