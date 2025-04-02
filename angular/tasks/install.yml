@@ -13,8 +13,14 @@
    global: yes
    state: present
 
+- name: clone the angular app repository
+  git:
+    repo: https://github.com/Abimbola-star/AngularTeam20.git
+    dest: /home/ec2-user/AngularTeam20/angular-devops-app
+    version: 'main'
+
 - name: Build the Angular project for production
-  shell: "cd /home/ec2-user/AngularTeam20/angular-devops-app && ng build --configuration production"
+  shell: ng build --configuration production"
   args:
     chdir: /home/ec2-user/AngularTeam20/angular-devops-app
 
