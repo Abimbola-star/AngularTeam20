@@ -1,4 +1,3 @@
----
-# tasks file for angular
--import_tasks: install.yml
--import_tasks: config.yml
+# tasks file for apache
+- import_tasks: install.yml
+- import_tasks: config.yml
