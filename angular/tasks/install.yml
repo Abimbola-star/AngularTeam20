@@ -19,7 +19,7 @@
     dest: /home/ec2-user/AngularTeam20/angular-devops-app
     owner: www-data
     group: www-data
-    mode: www-data
+    mode: "0755"
     
 - name: Build the Angular project for production
   shell: ng build --configuration production
