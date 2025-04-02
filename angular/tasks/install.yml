@@ -1,4 +1,13 @@
 ---
+
+- name: Ensure the angular project directory exists
+  file:
+    path: /var/www/angular-devops-app
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+    
 - name: Install dependencies (Node.js, npm, Angular CLI)
   apt:
     name: 
