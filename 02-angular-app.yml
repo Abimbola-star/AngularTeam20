@@ -1,5 +1,5 @@
 ---
-- name: deploy angular app to apache
+- name: deploy angular app with apache
   hosts: g1
   become: yes
   roles:
