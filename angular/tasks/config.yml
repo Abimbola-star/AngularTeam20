@@ -7,7 +7,7 @@
 
 - name: Configure Apache virtual host for Angular app
   template:
-    src: apache_virtualhost.conf.j2
+    src: angular/templates/apache_virtualhost.conf.j2
     dest: /etc/apache2/sites-available/angular-devops-app.conf
   become: true
 

@@ -1,0 +1,23 @@
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    ServerName {{ server_name }}
+    DocumentRoot {{ document_root }}
+    
+    # Set up directory options for serving static files
+    <Directory {{ document_root }}>
+        Options -Indexes +FollowSymLinks +MultiViews
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    # Logging
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    # Optional: Enable caching for static files to improve performance
+    <IfModule mod_expires.c>
+        ExpiresActive On
+        ExpiresDefault "access plus 1 year"
+    </IfModule>
+
+</VirtualHost>
