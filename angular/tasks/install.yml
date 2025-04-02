@@ -18,14 +18,14 @@
   
 - name: Install Angular CLI globally
   npm: 
-   name: "@angular/cli@10"
+   name: "@angular/cli@16"
    global: yes
    state: present
 
 - name: Build the Angular project for production
   command: ng build --prod
   args:
-    chdir: /var/www/angular-devops-app/package.json  
+    chdir: /var/www/angular-devops-app/ 
 
 - name: Copy built Angular files to Apache document root
   synchronize:
