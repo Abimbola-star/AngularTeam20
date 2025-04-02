@@ -1,7 +1,7 @@
 ---
 - name: Ensure the angular project directory exists
   synchronize:
-    src: my-angular-app
+    src: my-angular-app/angular.json
     dest: /var/www/angular-devops-app
     mode: push
     recursive: yes
