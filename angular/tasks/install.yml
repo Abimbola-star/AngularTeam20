@@ -4,7 +4,6 @@
   copy:
     src: src/app/package.json
     dest: /var/www/angular-devops-app/package.json
-    state: directory
     owner: www-data
     group: www-data
     mode: '0755'
