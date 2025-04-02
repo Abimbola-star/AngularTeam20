@@ -26,7 +26,7 @@
 - name: Build the Angular project for production
   command: ng build --prod
   args:
-  chdir: /var/www/angular-devops-app  
+    chdir: /var/www/angular-devops-app  
 
 - name: Copy built Angular files to Apache document root
   synchronize:
