@@ -20,7 +20,7 @@
     version: main
 
 - name: Build the Angular project for production
-  shell: ng build --configuration production"
+  shell: ng build --configuration production
   args:
     chdir: /home/ec2-user/AngularTeam20/angular-devops-app
 
