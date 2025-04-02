@@ -13,10 +13,10 @@
    global: yes
    state: present
 
-- name: copy the angular root directory
+- name: copy the angular root directory to the nodes
   copy:
     src: angular-devops-app
-    dest: /home/ec2-user/AngularTeam20/angular-devops-app
+    dest: /home/ubuntu/angular-devops-app/
     owner: www-data
     group: www-data
     mode: "0755"
@@ -24,12 +24,12 @@
 - name: Build the Angular project for production
   shell: ng build --configuration production
   args:
-    chdir: /home/ec2-user/AngularTeam20/angular-devops-app
+    chdir: /home/ubuntu/angular-devops-app/
 
 
 - name: Copy built Angular files to Apache document root
   synchronize:
-    src: /home/ec2-user/AngularTeam20/angular-devops-app/dist/angular-devops-app
+    src: /home/ubuntu/angular-devops-app/dist/angular-devops-app/
     dest: /var/www/angular-devops-app/
     mode: push
     become: true
