@@ -6,24 +6,25 @@
      - npm
     state: present
     update_cache: yes
-    become: true
   
-- name: Install Angular.js
-  npm: name:@angular/cli@10 global:yes
-  state: present
+- name: Install Angular CLI globally
+  npm: 
+   name: "@angular/cli@10"
+   global: yes
+   state: present
 
 - name: Build the Angular project
   command: ng build --prod
   args: 
     chdir: /var/www/angular-devops-app
-  become: true
 
 - name: Copy built angular files to apache directory
   copy:
     src: /var/www/angular-devops-app/dist/
-    dest: /var/www/angular-devops-app
+    dest: /var/www/html/
     owner: www-data
     group: www-data
     mode: '0755'
+  recurse: yes
   become: true
 ...
