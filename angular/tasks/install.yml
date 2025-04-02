@@ -1,11 +1,4 @@
 ---
-- name: Ensure the angular project directory exists
-  synchronize:
-    src: angular-devops-app
-    dest: /var/www/angular-devops-app
-    mode: push
-    recursive: yes
-
 - name: Install dependencies (Node.js, npm, Angular CLI)
   apt:
     name: 
@@ -20,38 +13,16 @@
    global: yes
    state: present
 
-- name: Install project dependencies (npm install)
-  command: npm install
-  args:
-    chdir: /var/www/angular-devops-app/
-
 - name: Build the Angular project for production
-  command: ng build --configuration production
+  shell: "cd /home/ec2-user/AngularTeam20/angular-devops-app && ng build --configuration production"
   args:
-    chdir: /var/www/angular-devops-app/ 
-
-- name: Set ownership and permissions for the project directory
-  file:
-    path: /var/www/angular-devops-app/
-    owner: www-data
-    group: www-data
-    mode: '0755'
-    recurse: yes
-
-- name: Set ownership and permissions for the dist folder
-  file:
-    path: /var/www/angular-devops-app/dist/
-    owner: www-data
-    group: www-data
-    mode: '0755'
-    recurse: yes
+    chdir: /home/ec2-user/AngularTeam20/angular-devops-app
 
 
 - name: Copy built Angular files to Apache document root
   synchronize:
-    src: /var/www/angular-devops-app/dist/
-    dest: /var/www/html/  
+    src: /home/ec2-user/AngularTeam20/angular-devops-app/dist/angular-devops-app
+    dest: /var/www/angular-devops-app/
     mode: push
-    recursive: yes
     become: true
 ...
