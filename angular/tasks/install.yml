@@ -17,7 +17,7 @@
   git:
     repo: https://github.com/Abimbola-star/AngularTeam20.git
     dest: /home/ec2-user/AngularTeam20/angular-devops-app
-    version: 'main'
+    version: main
 
 - name: Build the Angular project for production
   shell: ng build --configuration production"
