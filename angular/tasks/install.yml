@@ -4,8 +4,6 @@
   synchronize:
     src: src/app
     dest: /var/www/angular-devops-app
-    group: www-data
-    mode: '0755'
     recursive: yes
 
 - name: Install dependencies (Node.js, npm, Angular CLI)
@@ -27,14 +25,27 @@
   args:
     chdir: /var/www/angular-devops-app/ 
 
+  name: Set ownership and permissions for the project directory
+  file:
+    path: /var/www/angular-devops-app/
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Set ownership and permissions for the dist folder
+  file:
+    path: /var/www/angular-devops-app/dist/
+    owner: www-data
+    group: www-data
+    mode: '0755'
+    recurse: yes
+
+
 - name: Copy built Angular files to Apache document root
   synchronize:
     src: /var/www/angular-devops-app/dist/
     dest: /var/www/html/  
     mode: push
     recursive: yes
-    owner: www-data
-    group: www-data
-    mode: '0755'
     become: true
 ...
