@@ -2,7 +2,7 @@
 
 - name: Ensure the angular project directory exists
   copy:
-    src: src\app\package.json
+    src: src/app/package.json
     dest: /var/www/angular-devops-app
     state: directory
     owner: www-data
