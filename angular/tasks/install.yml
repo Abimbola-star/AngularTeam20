@@ -1,9 +1,9 @@
 ---
-
 - name: Ensure the angular project directory exists
   synchronize:
     src: src/app
     dest: /var/www/angular-devops-app
+    mode: push
     recursive: yes
 
 - name: Install dependencies (Node.js, npm, Angular CLI)
@@ -25,12 +25,13 @@
   args:
     chdir: /var/www/angular-devops-app/ 
 
-  name: Set ownership and permissions for the project directory
+- name: Set ownership and permissions for the project directory
   file:
     path: /var/www/angular-devops-app/
     owner: www-data
     group: www-data
     mode: '0755'
+    recurse: yes
 
 - name: Set ownership and permissions for the dist folder
   file:
