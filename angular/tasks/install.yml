@@ -15,11 +15,11 @@
 
 - name: copy the angular root directory
   copy:
-    src:angular-devops-app
-    dest:/home/ec2-user/AngularTeam20/angular-devops-app
-    owner:www-data
-    group:www-data
-    mode:"0755"
+    src: angular-devops-app
+    dest: /home/ec2-user/AngularTeam20/angular-devops-app
+    owner: www-data
+    group: www-data
+    mode: www-data
     
 - name: Build the Angular project for production
   shell: ng build --configuration production
