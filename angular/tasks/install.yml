@@ -1,13 +1,14 @@
 ---
 
 - name: Ensure the angular project directory exists
-  file:
-    path: /var/www/angular-devops-app
+  copy:
+    src: src\app\package.json
+    dest: /var/www/angular-devops-app
     state: directory
     owner: www-data
     group: www-data
     mode: '0755'
-    
+
 - name: Install dependencies (Node.js, npm, Angular CLI)
   apt:
     name: 
@@ -22,10 +23,10 @@
    global: yes
    state: present
 
-- name: Build the Angular project
+- name: Build the Angular project for production
   command: ng build --prod
-  args: 
-    chdir: /var/www/angular-devops-app
+  args:
+  chdir: /var/www/angular-devops-app  
 
 - name: Copy built Angular files to Apache document root
   synchronize:
