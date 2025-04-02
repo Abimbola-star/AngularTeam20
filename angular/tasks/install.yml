@@ -1,7 +1,7 @@
 ---
 
 - name: Ensure the angular project directory exists
-  copy:
+  synchronize:
     src: src/app
     dest: /var/www/angular-devops-app
     group: www-data
