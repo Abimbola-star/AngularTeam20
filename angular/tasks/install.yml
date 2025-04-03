@@ -41,6 +41,10 @@
     msg: "The build directory /home/ubuntu/angular-devops-app/dist/angular-devops-app does not exist."
   when: not build_output.stat.exists
 
+- name: Debugging -Show build output directory content
+  shell: ls -l /home/ubuntu/angular-devops-app/dist/angular-devops-app/
+  when: build_output.stat.exists
+
 - name: Copy built Angular files to Apache document root
   synchronize:
     src: /home/ubuntu/angular-devops-app/dist/angular-devops-app/
