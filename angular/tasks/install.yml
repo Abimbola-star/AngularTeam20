@@ -37,5 +37,4 @@
     src: /home/ubuntu/angular-devops-app/dist/angular-devops-app/
     dest: /var/www/angular-devops-app/
     mode: push
-    become: true 
 ...
