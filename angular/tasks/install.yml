@@ -20,6 +20,11 @@
     owner: www-data
     group: www-data
     mode: "0755"
+
+- name: installing angular dependencies
+  shell: npm install
+  args:
+    chdir: /home/ubuntu/angular-devops-app/
     
 - name: Build the Angular project for production
   shell: ng build --configuration production
