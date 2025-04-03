@@ -50,7 +50,6 @@
     src: /home/ubuntu/angular-devops-app/dist/angular-devops-app/
     dest: /var/www/angular-devops-app/
     mode: push
-    owner: "www-data"
-    group: "www-data"
+    perms: yes
   when: build_output.stat.exists
 ...
