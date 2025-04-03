@@ -31,10 +31,20 @@
   args:
     chdir: /home/ubuntu/angular-devops-app/
 
+- name: Check if build output exists
+  stat:
+    path: /home/ubuntu/angular-devops-app/dist/angular-devops-app
+  register: build_output
+
+- name: Fail if build directory does not exist
+  fail:
+    msg: "The build directory /home/ubuntu/angular-devops-app/dist/angular-devops-app does not exist."
+  when: not build_output.stat.exists
 
 - name: Copy built Angular files to Apache document root
   synchronize:
     src: /home/ubuntu/angular-devops-app/dist/angular-devops-app/
     dest: /var/www/angular-devops-app/
     mode: push
+  when: build_output.stat.exists
 ...
