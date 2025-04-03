@@ -15,7 +15,7 @@
 
 - name: copy the angular root directory to the nodes
   copy:
-    src: angular-devops-app
+    src: ./angular-devops-app
     dest: /home/ubuntu/angular-devops-app/
     owner: www-data
     group: www-data
