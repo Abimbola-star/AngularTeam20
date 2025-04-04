@@ -13,11 +13,9 @@
     state: present
 
 - name: Install mysqlclient if needed
-  pip:
-    name: mysqlclient  # Or use 'PyMySQL' if you prefer that
+  apt:
+    name: python3-mysqlclient
     state: present
-    executable: pip3
-  become: yes
 
 - name: Set Python interpreter for Ansible
   set_fact:
