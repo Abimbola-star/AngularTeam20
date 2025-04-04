@@ -46,10 +46,24 @@
   when: build_output.stat.exists
 
 - name: Copy built Angular files to Apache document root
-  synchronize:
+  copy:
     src: /home/ubuntu/angular-devops-app/dist/angular-devops-app/
-    dest: /var/www/angular-devops-app/
-    mode: push
-    perms: yes
-  when: build_output.stat.exists
+    dest: /var/www/html/
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
+- name: set correct permissions for Apache
+  file:
+    path: "/var/www/html/"
+    owner: www-data
+    group: www-data
+    recurse: yes
+    mode: "0755"
+  become: yes
+
+- name: Restart Apache
+  service:
+    name: apache2
+    state: restarted
 ...
