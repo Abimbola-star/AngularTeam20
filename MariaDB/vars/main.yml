@@ -1,2 +1,14 @@
 ---
 # vars file for MariaDB
+mariadb_root_password: "root_password"  
+mariadb_db_name: "angular_app_db"  
+mariadb_user: "angular_user"  
+mariadb_password: "your_password"  
+
+# Path to the seed data SQL file (if using MariaDB and seed data)
+seed_data_file: "/tmp/seed_data.sql"
+
+# Apache user and group settings
+apache_user: "www-data"
+apache_group: "www-data"
+
