@@ -1,0 +1,27 @@
+- name: Create the deployment directory for the version
+  file:
+    path: "/var/www/html/{{ artifact_version }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Copy the Angular app artifact to the deployment directory
+  copy:
+    src: "/home/ubuntu/angular-devops-app/angular-devops-app-artifact.tar.gz"
+    dest: "/tmp/angular-devops-app-artifact.tar.gz"
+    owner: www-data
+    group: www-data
+    mode: "0644"
+
+- name: Extract the Angular app artifact
+  unarchive:
+    src: "/tmp/angular-devops-app-artifact.tar.gz"
+    dest: "/var/www/html/{{ artifact_version }}"
+    remote_src: yes
+
+- name: Set up symlink to the latest version
+  file:
+    src: "/var/www/html/{{ artifact_version }}"
+    dest: "/var/www/html/current"
+    state: symlink
