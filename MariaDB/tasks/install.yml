@@ -1,4 +1,23 @@
 ---
+- name: Install Python 3 MySQL client libraries
+  apt:
+    name:
+      - python3-pymysql  # PyMySQL client for Python 3
+      - python3-dev      # Required for compiling some libraries (like mysqlclient)
+      - libmysqlclient-dev # MySQL client libraries for development
+    state: present
+
+- name: Install mysqlclient if needed
+  pip:
+    name: mysqlclient  # Or use 'PyMySQL' if you prefer that
+    state: present
+    executable: pip3
+  become: yes
+
+- name: Set Python interpreter for Ansible
+  set_fact:
+    ansible_python_interpreter: /usr/bin/python3
+
 - name: Install MariaDB
   apt:
     name: mariadb-server
@@ -33,7 +52,7 @@
     owner: root
     group: root
     mode: "0644"
-    
+
 - name: Import seed data into MariaDB
   mysql_db:
     name: "{{ mariadb_db_name }}"
