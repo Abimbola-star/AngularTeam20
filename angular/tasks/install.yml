@@ -7,15 +7,6 @@
     state: present
     update_cache: yes
 
-- name: Remove existing Angular CLI installation
-  command: sudo rm -rf /usr/local/lib/node_modules/@angular/cli
-
-- name: Clean npm cache
-  command: sudo npm cache clean --force
-  
-- name: Ensure proper ownership of node_modules directory
-  command: sudo chown -R $USER /usr/local/lib/node_modules/
-
 - name: Install Angular CLI globally
   npm: 
    name: "@angular/cli@16"
