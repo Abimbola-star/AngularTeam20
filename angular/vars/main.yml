@@ -1,2 +1,4 @@
 ---
 # vars file for angular
+artifact_version: "v1.0.0"
+...
