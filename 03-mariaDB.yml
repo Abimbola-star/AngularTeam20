@@ -1,0 +1,9 @@
+---
+- name: deploy angular app with apache
+  hosts: g1
+  become: yes
+  roles:
+   - apache
+   - angular
+   - MariaDB
+...
