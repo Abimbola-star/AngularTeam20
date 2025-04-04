@@ -52,6 +52,8 @@
     owner: www-data
     group: www-data
     mode: "0755"
+    recurse: yes
+    remote_src: yes
 
 - name: set correct permissions for Apache
   file:
@@ -60,7 +62,6 @@
     group: www-data
     recurse: yes
     mode: "0755"
-  become: yes
 
 - name: Restart Apache
   service:
