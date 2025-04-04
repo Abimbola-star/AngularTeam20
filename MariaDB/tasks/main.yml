@@ -1,0 +1,2 @@
+# tasks file for mariaDB
+- import_tasks: install.yml
