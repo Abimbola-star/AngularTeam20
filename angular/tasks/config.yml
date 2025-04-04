@@ -17,5 +17,5 @@
   file:
     src: "/var/www/html/{{ artifact_version }}"
     dest: "/var/www/html/current"
-    state: symlink
+    state: link
 ...
