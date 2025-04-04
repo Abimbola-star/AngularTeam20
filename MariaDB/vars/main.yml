@@ -1,4 +1,6 @@
 ---
+ansible_python_interpreter: /usr/bin/python3
+
 # vars file for MariaDB
 mariadb_root_password: "root_password"  
 mariadb_db_name: "angular_app_db"  
