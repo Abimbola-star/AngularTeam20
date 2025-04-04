@@ -45,6 +45,12 @@
   shell: ls -l /home/ubuntu/angular-devops-app/dist/angular-devops-app/
   when: build_output.stat.exists
 
+- name: create artifact (tar.gz) of the built angular project
+  command:
+    cmd: "tar -czvf /home/ubuntu/angular-devops-app/angular-devops-app-artifact.tar.gz -C /home/ubuntu/angular-devops-app/dist/ angular-devops-app"
+  when: build_output.stat.exists
+
+
 - name: Copy built Angular files to Apache document root
   copy:
     src: /home/ubuntu/angular-devops-app/dist/angular-devops-app/
