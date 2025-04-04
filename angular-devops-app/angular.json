@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "defaultProject": "angular-devops-app",
+  "newProjectRoot": "projects",
   "projects": {
     "angular-devops-app": {
       "projectType": "application",
@@ -18,30 +18,56 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
+            "aot": true,
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.css"],
             "scripts": []
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
+              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true, 
+              "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "angular-devops-app:build"
-          }
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "angular-devops-app:build:production"
+            },
+            "development": {
+              "browserTarget": "angular-devops-app:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
         }
       }
     }
-  }
+  },
+  "defaultProject": "angular-devops-app"
 }
