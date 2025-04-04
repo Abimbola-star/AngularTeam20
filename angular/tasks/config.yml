@@ -7,17 +7,9 @@
     group: www-data
     mode: '0755'
 
-- name: Copy the Angular app artifact to the deployment directory
-  copy:
-    src: "/home/ubuntu/angular-devops-app/angular-devops-app-artifact.tar.gz"
-    dest: "/tmp/angular-devops-app-artifact.tar.gz"
-    owner: www-data
-    group: www-data
-    mode: "0644"
-
-- name: Extract the Angular app artifact
+- name: extract the angular app artifact from the remote server
   unarchive:
-    src: "/tmp/angular-devops-app-artifact.tar.gz"
+    src: "/home/ubuntu/angular-devops-app/angular-devops-app-artifact.tar.gz"
     dest: "/var/www/html/{{ artifact_version }}"
     remote_src: yes
 
