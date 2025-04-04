@@ -12,10 +12,10 @@
       - libmysqlclient-dev # MySQL client libraries for development
     state: present
 
-- name: Install mysqlclient if needed
-  apt:
-    name: python3-mysqlclient
-    state: present
+- name: Install MySQL client library for Python3 (mysqlclient)
+  pip:
+    name: mysqlclient
+    executable: /usr/bin/pip3
 
 - name: Set Python interpreter for Ansible
   set_fact:
