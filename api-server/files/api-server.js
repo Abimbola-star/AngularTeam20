@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const config = require('./api-server.config.j2');
+const config = require('./api-server.config.js');
 const http = require('http');
 const url = require('url');
 
