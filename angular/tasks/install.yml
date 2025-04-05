@@ -7,6 +7,21 @@
     state: present
     update_cache: yes
 
+- name: Uninstall any existing global Angular CLI
+  command: npm uninstall -g @angular/cli
+  ignore_errors: yes
+
+- name: clear npm cache
+  command: npm cache clean --force
+  
+- name: Ensure npm has proper permissions
+  file: 
+    path: "/usr/local/lib/node_modules"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
 - name: Install Angular CLI globally
   npm: 
    name: "@angular/cli@16"
