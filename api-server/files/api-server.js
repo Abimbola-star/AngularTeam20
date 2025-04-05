@@ -31,6 +31,34 @@ const server = http.createServer(function (req, res) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(results)); // Send results from the database
     });
+  }  else if (parsedUrl.pathname === '/data' && req.method === 'POST') {
+    let body = '';
+    
+    req.on('data', chunk => {
+      body += chunk;
+    });
+
+    req.on('end', () => {
+      try {
+        const postData = JSON.parse(body);
+        
+        // Insert the new data into the database
+        const query = 'INSERT INTO api_data (name, description) VALUES (?, ?)';
+        connection.query(query, [postData.name, postData.description], function (err, results) {
+          if (err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Error inserting data into database' }));
+            return;
+          }
+
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ message: 'Data inserted successfully', id: results.insertId }));
+        });
+      } catch (err) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid data format' }));
+      }
+    });
   } else {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not Found');
