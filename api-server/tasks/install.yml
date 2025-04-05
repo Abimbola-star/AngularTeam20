@@ -1,0 +1,45 @@
+---
+- name: Install Node.js
+  apt:
+    name: nodejs
+    state: present
+  become: true
+
+- name: Install npm (Node.js package manager)
+  apt:
+    name: npm
+    state: present
+  become: true
+
+- name: Install MySQL Node.js module
+  npm:
+    name: mysql
+    state: present
+    global: yes
+  become: true
+
+- name: Create directory for the API server
+  file:
+    path: "/opt/api-server"
+    state: directory
+  become: true
+
+- name: Deploy API server code
+  copy:
+    src: api-server/files/api-server.js
+    dest: "/opt/api-server/api-server.js"
+    mode: '0644'
+  become: true
+
+- name: Create systemd service for the API server
+  template:
+    src: api-server/templates/api-server.service.j2
+    dest: "/etc/systemd/system/api-server.service"
+  become: true
+
+- name: Start and enable the API server service
+  service:
+    name: api-server
+    state: started
+    enabled: true
+  become: true

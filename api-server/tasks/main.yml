@@ -1,2 +1,3 @@
 ---
 # tasks file for api-server
+- import_tasks: install.yml
