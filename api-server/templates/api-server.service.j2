@@ -3,6 +3,8 @@ Description=API Server
 After=network.target
 
 [Service]
+Restart=always
+RestartSec=5s
 ExecStart=/usr/bin/node /opt/api-server/api-server.js
 WorkingDirectory=/opt/api-server
 StandardOutput=syslog
