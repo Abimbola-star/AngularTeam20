@@ -40,8 +40,8 @@
 
 - name: Create directory for the API server
   file:
-    path: "/opt/api-server"
-    state: directory
+  path: "/opt/api-server"
+  state: directory
   become: true
 
 - name: Deploy API server code
