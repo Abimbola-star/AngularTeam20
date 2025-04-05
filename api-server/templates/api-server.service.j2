@@ -1,0 +1,18 @@
+[Unit]
+Description=API Server
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /opt/api-server/api-server.js
+WorkingDirectory=/opt/api-server
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=api-server
+User=ubuntu
+Group=ubuntu
+Environment=NODE_ENV=production
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
