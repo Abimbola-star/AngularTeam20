@@ -18,6 +18,12 @@
     global: yes
   become: true
 
+- name: Create app-database in MariaDB
+  mysql_db:
+    name: app-database
+    state: present
+  become: true
+
 - name: Create directory for the API server
   file:
     path: "/opt/api-server"
