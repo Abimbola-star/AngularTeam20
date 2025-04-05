@@ -38,6 +38,9 @@
     state: present
     login_user: root
     login_password: "{{ mariadb_root_password }}"
+    owner: root
+    group: root
+    mode: "0644"
 
 - name: Create MariaDB user for Angular app
   mysql_user:
@@ -47,6 +50,9 @@
     state: present
     login_user: root
     login_password: "{{ mariadb_root_password }}"
+    owner: root
+    group: root
+    mode: "0644"
 
 - name: Generate seed data SQL file
   template:
@@ -63,4 +69,7 @@
     target: "/tmp/seed_data.sql"
     login_user: root
     login_password: "{{ mariadb_root_password }}"
+    owner: root
+    group: root
+    mode: "0644"
 ...
