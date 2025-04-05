@@ -22,6 +22,8 @@
   mysql_db:
     name: app-database
     state: present
+    login_user: root
+    login_password: "{{ api_db_password }}"
   become: true
 
 - name: Create directory for the API server
