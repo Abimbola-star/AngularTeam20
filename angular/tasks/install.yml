@@ -7,6 +7,13 @@
     state: present
     update_cache: yes
 
+- name: Ensure /usr/local/lib/node_modules/@angular/cli is empty
+  file:
+   path: "/usr/local/lib/node_modules/@angular/cli"
+   state: absent
+  ignore_errors: yes
+
+
 - name: Uninstall any existing global Angular CLI
   command: npm uninstall -g @angular/cli
   ignore_errors: yes
