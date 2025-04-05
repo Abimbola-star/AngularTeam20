@@ -3,6 +3,8 @@ const config = require('./api-server.config.j2');
 const http = require('http');
 const url = require('url');
 
+console.log('Database Config:', config);  // Log the config object to check its content
+
 // Create a connection to the database
 const connection = mysql.createConnection(config);
 
