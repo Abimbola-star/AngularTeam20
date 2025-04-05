@@ -26,6 +26,15 @@
     login_password: "{{ api_db_password }}"
   become: true
 
+- name: Create MariaDB user for app-database
+  mysql_user:
+    name: "{{ api_db_user }}
+    password: "{{ api_db_password }}" 
+    priv: "{{ api_db_name }}.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ api_db_root_password }}"
+
 - name: Create API data table in app-database (optional)
   mysql_query:
     query: |

@@ -1,5 +1,7 @@
 ---
+api_db_root_password: "your_new_password"
 api_db_host: "localhost"
 api_db_user: "app_user"
 api_db_password: "your_new_password"
 api_db_name: "app_database"
+...
