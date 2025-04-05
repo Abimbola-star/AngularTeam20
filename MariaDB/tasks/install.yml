@@ -38,7 +38,7 @@
     state: present
     login_user: root
     login_password: "{{ mariadb_root_password }}"
-
+   
 - name: Create MariaDB user for Angular app
   mysql_user:
     name: "{{ mariadb_user }}"

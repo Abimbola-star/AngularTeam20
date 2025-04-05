@@ -26,6 +26,18 @@
     login_password: "{{ api_db_password }}"
   become: true
 
+- name: Create API data table in app-database (optional)
+  mysql_query:
+   query: |
+    CREATE TABLE IF NOT EXISTS api_data (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       name VARCHAR(255) NOT NULL,
+       description TEXT
+    );
+   db: app-database
+   login_user: root
+   login_password: "{{ api_db_password }}
+
 - name: Create directory for the API server
   file:
     path: "/opt/api-server"
@@ -38,6 +50,12 @@
     dest: "/opt/api-server/api-server.js"
     mode: '0644'
   become: true
+
+- name: Configure API server to connect to MariaDB
+  template:
+     src: api-server/templates/api-server.config.j2
+     dest: "/opt/api-server/api-server.config.js"
+     mode: '0644'
 
 - name: Create systemd service for the API server
   template:

@@ -1,37 +1,25 @@
 const mysql = require('mysql');
-const express = require('express');
-const app = express();
-const port = 3000;
+const config = require('./api-server.config.js');
 
-// Create a connection to the MariaDB database
-const db = mysql.createConnection({
-  host: 'localhost',  // Database is on the same server
-  user: '{{ api_db_user }}',  // From defaults/main.yml
-  password: '{{ api_db_password }}',  // From defaults/main.yml
-  database: '{{ api_db_name }}'  // From defaults/main.yml
-});
+// Create a connection to the database
+const connection = mysql.createConnection(config);
 
-db.connect(function(err) {
+// Connect to the database
+connection.connect(function(err) {
   if (err) {
-    console.error('Could not connect to database: ' + err.stack);
+    console.error('error connecting to the database: ' + err.stack);
     return;
   }
-  console.log('Connected to the database');
+  console.log('connected to the database as id ' + connection.threadId);
 });
 
-// Example API route to fetch data from the database
-app.get('/api/data', (req, res) => {
-  db.query('SELECT * FROM your_table', function (err, results) {
-    if (err) {
-      res.status(500).send('Error fetching data');
-    } else {
-      res.json(results);
-    }
-  });
+// Sample endpoint - replace with your actual API code
+const http = require('http');
+const server = http.createServer(function(req, res) {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('API Server is running!\n');
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`API server listening at http://localhost:${port}`);
+server.listen(8080, () => {
+  console.log('API Server is listening on port 8080');
 });
-
