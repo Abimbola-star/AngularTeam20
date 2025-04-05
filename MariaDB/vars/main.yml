@@ -2,10 +2,10 @@
 ansible_python_interpreter: /usr/bin/python3
 
 # vars file for MariaDB
-mariadb_root_password: "root_password"  
+mariadb_root_password: "your_new_password"
 mariadb_db_name: "angular_app_db"  
 mariadb_user: "angular_user"  
-mariadb_password: "your_password"  
+mariadb_password: "your_new_password"
 
 # Path to the seed data SQL file (if using MariaDB and seed data)
 seed_data_file: "/tmp/seed_data.sql"
