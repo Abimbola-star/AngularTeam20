@@ -28,20 +28,21 @@
 
 - name: Create API data table in app-database (optional)
   mysql_query:
-   query: |
-    CREATE TABLE IF NOT EXISTS api_data (
-       id INT AUTO_INCREMENT PRIMARY KEY,
-       name VARCHAR(255) NOT NULL,
-       description TEXT
-    );
-   db: app-database
-   login_user: root
-   login_password: "{{ api_db_password }}
+    query: |
+      CREATE TABLE IF NOT EXISTS api_data (
+         id INT AUTO_INCREMENT PRIMARY KEY,
+         name VARCHAR(255) NOT NULL,
+         description TEXT
+      );
+    db: app-database
+    login_user: root
+    login_password: "{{ api_db_password }}"
+  become: true
 
 - name: Create directory for the API server
   file:
-  path: "/opt/api-server"
-  state: directory
+    path: "/opt/api-server"
+    state: directory
   become: true
 
 - name: Deploy API server code
@@ -53,9 +54,10 @@
 
 - name: Configure API server to connect to MariaDB
   template:
-     src: api-server/templates/api-server.config.j2
-     dest: "/opt/api-server/api-server.config.js"
-     mode: '0644'
+    src: api-server/templates/api-server.config.j2
+    dest: "/opt/api-server/api-server.config.js"
+    mode: '0644'
+  become: true
 
 - name: Create systemd service for the API server
   template:
@@ -69,3 +71,4 @@
     state: started
     enabled: true
   become: true
+...
