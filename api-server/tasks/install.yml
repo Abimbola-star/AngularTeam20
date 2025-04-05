@@ -34,9 +34,9 @@
          name VARCHAR(255) NOT NULL,
          description TEXT
       );
-    db: app-database
     login_user: root
     login_password: "{{ api_db_password }}"
+    login_db: app-database
   become: true
 
 - name: Create directory for the API server
