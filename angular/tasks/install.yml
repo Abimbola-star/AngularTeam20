@@ -18,6 +18,11 @@
   command: npm uninstall -g @angular/cli
   ignore_errors: yes
 
+- name: Set npm registry timeout and force a registry
+  shell: |
+   npm config set registry https://registry.npmjs.org/
+   npm config set timeout 60000
+
 - name: Ensure Node.js is installed and working
   command: node -v
   register: node_version
@@ -39,22 +44,30 @@
   when: npm_version.rc != 0
 
 
-- name: clear npm cache
-  command: npm cache clean --force
-  
-- name: Ensure npm has proper permissions
-  file: 
+- name: Clear npm cache with elevated privileges
+  shell: npm cache clean --force
+  become: true
+  retries: 3
+  delay: 5
+  register: npm_cache_clean
+  until: npm_cache_clean.rc == 0
+
+- name: Ensure npm global directory is writable
+  file:
     path: "/usr/local/lib/node_modules"
     state: directory
     owner: root
     group: root
     mode: "0755"
+  become: true
 
-- name: Install Angular CLI globally
-  npm: 
-   name: "@angular/cli@16"
-   global: yes
-   state: present
+- name: Install Angular CLI globally with verbosity
+  shell: npm install -g @angular/cli@16 --verbose
+  become: true
+  register: install_output
+  retries: 3
+  delay: 5
+  until: install_output.rc == 0
 
 - name: Ensure the angular-devops-app directory exists
   file:
@@ -73,7 +86,7 @@
     mode: "0755"
 
 - name: installing angular dependencies
-  shell: npm install
+  shell: npm install --verbose
   args:
     chdir: /home/ubuntu/angular-devops-app/
   register: npm_install_output
