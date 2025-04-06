@@ -18,10 +18,11 @@
   command: npm uninstall -g @angular/cli
   ignore_errors: yes
 
-- name: Set npm registry timeout and force a registry
+- name: Set npm registry and fetch timeout
   shell: |
-   npm config set registry https://registry.npmjs.org/
-   npm config set timeout 60000
+    npm config set registry https://registry.npmjs.org/
+    npm config set fetch-timeout 60000
+  become: true
 
 - name: Ensure Node.js is installed and working
   command: node -v
@@ -59,6 +60,13 @@
     owner: root
     group: root
     mode: "0755"
+  become: true
+
+- name: Install Angular CLI globally with elevated privileges
+  npm:
+    name: "@angular/cli@16"
+    global: yes
+    state: present
   become: true
 
 - name: Install Angular CLI globally with verbosity
