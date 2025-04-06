@@ -48,13 +48,6 @@
     login_user: root
     login_password: "{{ mariadb_root_password }}"
 
-- name: Ensure MySQL configuration allows remote connections
-  lineinfile:
-    path: /etc/mysql/my.cnf
-    regexp: '^bind-address'
-    line: 'bind-address = 0.0.0.0'
-    state: present
-
 - name: Generate seed data SQL file
   template:
     src: seed_data.sql.j2
