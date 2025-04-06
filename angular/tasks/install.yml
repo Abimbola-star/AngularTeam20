@@ -1,89 +1,17 @@
 ---
 - name: Install dependencies (Node.js, npm, Angular CLI)
   apt:
-    name: 
+    name:
      - nodejs
      - npm
     state: present
     update_cache: yes
 
-- name: Ensure /usr/local/lib/node_modules/@angular/cli is empty
-  file:
-   path: "/usr/local/lib/node_modules/@angular/cli"
-   state: absent
-  ignore_errors: yes
-
-
-- name: Uninstall any existing global Angular CLI
-  command: npm uninstall -g @angular/cli
-  ignore_errors: yes
-
-- name: Set npm registry and fetch timeout
-  shell: |
-    npm config set registry https://registry.npmjs.org/
-    npm config set fetch-timeout 60000
-  become: true
-
-- name: Ensure Node.js is installed and working
-  command: node -v
-  register: node_version
-  changed_when: false
-
-- name: Fail if Node.js is not installed
-  fail:
-    msg: "Node.js is not installed"
-  when: node_version.rc != 0
-
-- name: Ensure npm is installed and working
-  command: npm -v
-  register: npm_version
-  changed_when: false
-
-- name: Fail if npm is not installed
-  fail:
-    msg: "npm is not installed"
-  when: npm_version.rc != 0
-
-
-- name: Clear npm cache with elevated privileges
-  shell: npm cache clean --force
-  become: true
-  retries: 3
-  delay: 5
-  register: npm_cache_clean
-  until: npm_cache_clean.rc == 0
-
-- name: Ensure npm global directory is writable
-  file:
-    path: "/usr/local/lib/node_modules"
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
-  become: true
-
-- name: Install Angular CLI globally with elevated privileges
+- name: Install Angular CLI globally
   npm:
-    name: "@angular/cli@16"
-    global: yes
-    state: present
-  become: true
-
-- name: Install Angular CLI globally with verbosity
-  shell: npm install -g @angular/cli@16 --verbose
-  become: true
-  register: install_output
-  retries: 3
-  delay: 5
-  until: install_output.rc == 0
-
-- name: Ensure the angular-devops-app directory exists
-  file:
-    path: /home/ubuntu/angular-devops-app
-    state: directory
-    owner: www-data
-    group: www-data
-    mode: "0755"
+   name: "@angular/cli@16"
+   global: yes
+   state: present
 
 - name: copy the angular root directory to the nodes
   copy:
@@ -94,14 +22,10 @@
     mode: "0755"
 
 - name: installing angular dependencies
-  shell: npm install --verbose
+  shell: npm install
   args:
     chdir: /home/ubuntu/angular-devops-app/
-  register: npm_install_output
-  retries: 3
-  delay: 5
-  until: npm_install_output.rc == 0
-    
+
 - name: Build the Angular project for production
   shell: ng build --configuration production
   args:
@@ -121,12 +45,6 @@
   shell: ls -l /home/ubuntu/angular-devops-app/dist/angular-devops-app/
   when: build_output.stat.exists
 
-- name: create artifact (tar.gz) of the built angular project
-  command:
-    cmd: "tar -czvf /home/ubuntu/angular-devops-app/angular-devops-app-artifact.tar.gz -C /home/ubuntu/angular-devops-app/dist/ angular-devops-app"
-  when: build_output.stat.exists
-
-
 - name: Copy built Angular files to Apache document root
   copy:
     src: /home/ubuntu/angular-devops-app/dist/angular-devops-app/
@@ -143,7 +61,7 @@
     group: www-data
     recurse: yes
     mode: "0755"
-
+    
 - name: Restart Apache
   service:
     name: apache2
