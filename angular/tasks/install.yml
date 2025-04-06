@@ -45,6 +45,11 @@
   shell: ls -l /home/ubuntu/angular-devops-app/dist/angular-devops-app/
   when: build_output.stat.exists
 
+- name: Create artifact (tar.gz) of the built Angular project
+  command:
+    cmd: "tar -czvf /home/ubuntu/angular-devops-app/angular-devops-app-artifact.tar.gz -C /home/ubuntu/angular-devops-app/dist/ angular-devops-app"
+  when: build_output.stat.exists
+
 - name: Copy built Angular files to Apache document root
   copy:
     src: /home/ubuntu/angular-devops-app/dist/angular-devops-app/
@@ -61,7 +66,7 @@
     group: www-data
     recurse: yes
     mode: "0755"
-    
+
 - name: Restart Apache
   service:
     name: apache2
