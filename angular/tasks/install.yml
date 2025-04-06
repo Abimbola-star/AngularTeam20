@@ -18,6 +18,27 @@
   command: npm uninstall -g @angular/cli
   ignore_errors: yes
 
+- name: Ensure Node.js is installed and working
+  command: node -v
+  register: node_version
+  changed_when: false
+
+- name: Fail if Node.js is not installed
+  fail:
+    msg: "Node.js is not installed"
+  when: node_version.rc != 0
+
+- name: Ensure npm is installed and working
+  command: npm -v
+  register: npm_version
+  changed_when: false
+
+- name: Fail if npm is not installed
+  fail:
+    msg: "npm is not installed"
+  when: npm_version.rc != 0
+
+
 - name: clear npm cache
   command: npm cache clean --force
   
@@ -35,6 +56,14 @@
    global: yes
    state: present
 
+- name: Ensure the angular-devops-app directory exists
+  file:
+    path: /home/ubuntu/angular-devops-app
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+
 - name: copy the angular root directory to the nodes
   copy:
     src: angular-devops-app/
@@ -47,6 +76,10 @@
   shell: npm install
   args:
     chdir: /home/ubuntu/angular-devops-app/
+  register: npm_install_output
+  retries: 3
+  delay: 5
+  until: npm_install_output.rc == 0
     
 - name: Build the Angular project for production
   shell: ng build --configuration production
