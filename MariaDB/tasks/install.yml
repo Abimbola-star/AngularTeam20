@@ -32,10 +32,11 @@
     state: started
     enabled: yes
     
-- name: Change MySQL root authentication method to password-based
-  command: >
-    mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_new_password'; FLUSH PRIVILEGES;"
-  ignore_errors: yes
+- name: Update root password for MariaDB (compatibility fix)
+  shell: |
+    mysql -u root -e "UPDATE mysql.user SET password = PASSWORD('your_new_password') WHERE user = 'root' AND host = 'localhost'; FLUSH PRIVILEGES;"
+  become: true
+  become_user: mysql
 
 - name: Create Angular app database
   mysql_db:
