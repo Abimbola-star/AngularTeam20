@@ -5,6 +5,7 @@ pipeline {
         VERSION = "${BUILD_NUMBER}"
         ARTIFACT_NAME = "angular-devops-app-artifact-${VERSION}.tar.gz"
         S3_BUCKET = 's3://ansible20-angular-app'
+        SONARQUBE = 'SonarQube Scanner'
         SONARQUBE_URL = "http://18.213.2.225:9000/"
         SONARQUBE_TOKEN = credentials('SonarQube_Token')  // Corrected variable name to match Jenkins credentials
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
@@ -24,7 +25,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube_Token') {
+                withSonarQubeEnv('SonarQube Scanner') {
                     sh """
                   sonar-scanner \
                  -Dsonar.projectKey=angular-devops-app \
