@@ -11,10 +11,10 @@ const connection = mysql.createConnection(config);
 // Connect to the database
 connection.connect(function (err) {
   if (err) {
-    console.error('Error connecting to the database: ' + err.stack);
+    console.error(`Error connecting to the database: ${err.stack}`);
     return;
   }
-  console.log('Connected to the database as id ' + connection.threadId);
+  console.log(`Connected to the database as id ${connection.threadId}`);
 });
 
 // Sample endpoint - Replace with your actual API code
