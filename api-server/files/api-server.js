@@ -67,7 +67,7 @@ const server = http.createServer(function (req, res) {
   }
 });
 
-server.listen(8081, () => {
+server.listen(8081, '0.0.0.0', () => {
   console.log('API Server is listening on port 8081');
 });
 
