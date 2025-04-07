@@ -23,9 +23,10 @@ pipeline {
                 checkout scm
             }
         }
-
+    }
         stage('SonarQube Analysis') {
             steps {
+               withCredentials([string(credentialsId: 'SonarQube_Token', variable: 'SONARQUBE_TOKEN')]) { 
                 withSonarQubeEnv('SonarQube_Token') {
                     sh """
                   sonar-scanner \
@@ -37,7 +38,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Build & Deploy') {
             steps {
                 ansiblePlaybook(
