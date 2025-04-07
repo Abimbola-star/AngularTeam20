@@ -51,7 +51,7 @@ pipeline {
             steps {
                 // Download the artifact from S3
                 sh """
-                    aws s3 cp ${S3_BUCKET}/angular-app-${params.ROLLBACK_VERSION}.tar.gz . --region us-east-1
+                    aws s3 cp ${S3_BUCKET}/angular-app-${params.ROLLBACK_VERSION}.tar.gz /home/ubuntu/angular-devops-app/ --region us-east-1
                 """
                 // Deploy the previous artifact version
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: 'SSH_KEY')]) {
