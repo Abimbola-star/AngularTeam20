@@ -52,17 +52,18 @@ pipeline {
     steps {
         // Ensure the directory exists and has proper permissions
         sh """
-            sudo chmod -R 775 /home/ubuntu/angular-devops-app
+            echo '' | sudo -S chmod -R 775 /home/ubuntu/angular-devops-app
         """
         // Download the artifact from S3
         sh """
-        sudo aws s3 cp ${S3_BUCKET}/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz /home/ubuntu/angular-devops-app/ --region us-east-1
+            echo '' | sudo -S aws s3 cp ${S3_BUCKET}/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz /home/ubuntu/angular-devops-app/ --region us-east-1
         """
 
-        // Ensure the artifact can be extracted and deployed with the correct permissions
+        // Extract the artifact with proper permissions
         sh """
-            sudo tar -xzvf /home/ubuntu/angular-devops-app/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz -C /home/ubuntu/angular-devops-app
+            echo '' | sudo -S tar -xzvf /home/ubuntu/angular-devops-app/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz -C /home/ubuntu/angular-devops-app
         """
+
 
         // Deploy the previous artifact version
         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: 'SSH_KEY')]) {
