@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SCANNER_HOME = 'SonarQube_Scanner_4.6'
+        SCANNER_HOME = '/opt/sonar-scanner'
         VERSION = "${BUILD_NUMBER}"
         ARTIFACT_NAME = "angular-devops-app-artifact-${VERSION}.tar.gz"
         S3_BUCKET = 's3://ansible20-angular-app'
@@ -10,6 +10,7 @@ pipeline {
         SONARQUBE_TOKEN = credentials('SonarQube_Token')  // Corrected variable name to match Jenkins credentials
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')  // You may need to add this if you're using AWS
+        PATH = "${PATH}:${SCANNER_HOME}/bin"
     }
 
     parameters {
@@ -30,8 +31,8 @@ pipeline {
                   sonar-scanner \
                  -Dsonar.projectKey=angular-devops-app \
                  -Dsonar.sources=. \
-                 -Dsonar.host.url=http://18.213.2.225:9000 \
-                 -Dsonar.token=sqp_febce8fc5a1a953848d24f0d94279d85cc9ed4cd
+                 -Dsonar.host.url=${SONARQUBE_URL}\
+                 -Dsonar.login=${SONARQUBE_TOKEN}
                     """
                 }
             }
