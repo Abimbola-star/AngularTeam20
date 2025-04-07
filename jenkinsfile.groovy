@@ -6,7 +6,8 @@ pipeline {
         ARTIFACT_NAME = "angular-devops-app-artifact-${VERSION}.tar.gz"
         S3_BUCKET = 's3://ansible20-angular-app'
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')  // You may need to add this if you're using AWS
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')  // AWS credentials
+        EC2_INSTANCE_CREDENTIALS = credentials('ec2-instance')  // The SSH private key
     }
 
     parameters {
@@ -22,11 +23,16 @@ pipeline {
 
         stage('Build & Deploy') {
             steps {
-                ansiblePlaybook(
-                    playbook: '02-angular-app.yml',
-                    inventory: 'hosts.ini',
-                    extraVars: [version: VERSION]
-                )
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: 'SSH_KEY')]) {
+                    ansiblePlaybook(
+                        playbook: '02-angular-app.yml',
+                        inventory: 'hosts.ini',
+                        extraVars: [
+                            version: VERSION,
+                            ansible_ssh_private_key_file: "$SSH_KEY"  // Pass SSH key to Ansible
+                        ]
+                    )
+                }
             }
         }
 
@@ -51,7 +57,10 @@ pipeline {
                 ansiblePlaybook(
                     playbook: '02-angular-app.yml',
                     inventory: 'hosts.ini',
-                    extraVars: [artifactName: "angular-app-${params.ROLLBACK_VERSION}.tar.gz"]
+                    extraVars: [
+                        artifactName: "angular-app-${params.ROLLBACK_VERSION}.tar.gz",
+                        ansible_ssh_private_key_file: "$SSH_KEY"  // Pass SSH key for rollback
+                    ]
                 )
             }
         }
@@ -61,8 +70,11 @@ pipeline {
                 script {
                     // Optionally, set up MariaDB if needed
                     ansiblePlaybook(
-                        playbook: '03-mariadb-and-api.yml',  // If you need a separate MariaDB setup playbook
-                        inventory: 'hosts.ini'
+                        playbook: '03-mariadb-and-api.yml',
+                        inventory: 'hosts.ini',
+                        extraVars: [
+                            ansible_ssh_private_key_file: "$SSH_KEY"  // Pass SSH key
+                        ]
                     )
                 }
             }
