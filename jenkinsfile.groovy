@@ -46,29 +46,35 @@ pipeline {
         }
 
         stage('Rollback') {
-            when {
-                expression { return params.ROLLBACK_VERSION != '' }
-            }
-            steps {
-                // Download the artifact from S3
-                sh """
-                    aws s3 cp ${S3_BUCKET}/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz /home/ubuntu/angular-devops-app/ --region us-east-1
-                """
-                // Deploy the previous artifact version
-                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: 'SSH_KEY')]) {
-                    ansiblePlaybook(
-                        playbook: '02-angular-app.yml',
-                        inventory: 'hosts.ini',
-                        extraVars: [
-                            version: "${VERSION}",  // Ensure version is passed correctly
-                            artifactName: "angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz",  // Pass artifact name
-                            ansible_ssh_private_key_file: "$SSH_KEY"  // Pass SSH key for rollback
-                        ]
-                    )
-                }
-            }
-        }
+    when {
+        expression { return params.ROLLBACK_VERSION != '' }
+    }
+    steps {
+        // Ensure the directory exists and has the right permissions
+        sh """
+            sudo mkdir -p /home/ubuntu/angular-devops-app
+            sudo chown -R ubuntu:ubuntu /home/ubuntu/angular-devops-app
+        """
 
+        // Download the artifact from S3
+        sh """
+            aws s3 cp ${S3_BUCKET}/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz /home/ubuntu/angular-devops-app/ --region us-east-1
+        """
+
+        // Deploy the previous artifact version
+        withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: 'SSH_KEY')]) {
+            ansiblePlaybook(
+                playbook: '02-angular-app.yml',
+                inventory: 'hosts.ini',
+                extraVars: [
+                    version: "${VERSION}",  // Ensure version is passed correctly
+                    artifactName: "angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz",  // Correct artifact name
+                    ansible_ssh_private_key_file: "$SSH_KEY"  // Pass SSH key for rollback
+                ]
+            )
+        }
+    }
+}
         stage('Setup MariaDB') {
             steps {
                 script {
