@@ -25,7 +25,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube Scanner') {
+                withSonarQubeEnv('SonarQube_Token') {
                     sh """
                   sonar-scanner \
                  -Dsonar.projectKey=angular-devops-app \
