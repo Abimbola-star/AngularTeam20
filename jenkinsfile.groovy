@@ -50,9 +50,13 @@ pipeline {
         expression { return params.ROLLBACK_VERSION != '' }
     }
     steps {
+        // Ensure the directory exists and has proper permissions
+        sh """
+            sudo chmod -R 775 /home/ubuntu/angular-devops-app
+        """
         // Download the artifact from S3
         sh """
-            aws s3 cp ${S3_BUCKET}/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz /home/ubuntu/angular-devops-app/ --region us-east-1
+        sudo aws s3 cp ${S3_BUCKET}/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz /home/ubuntu/angular-devops-app/ --region us-east-1
         """
 
         // Ensure the artifact can be extracted and deployed with the correct permissions
