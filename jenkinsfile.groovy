@@ -25,14 +25,14 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withCredentials([string(credentialsId: 'SonarQube_Token', variable: 'SONARQUBE_TOKEN')]) {
+                withCredentials([string(credentialsId: 'SonarQube_Token', variable: 'SonarQube_Token')]) {
                     withSonarQubeEnv('SonarQube_Token') {  // Ensure SonarQube is configured in Jenkins
                         sh """
                         sonar-scanner \
                         -Dsonar.projectKey=angular-devops-app \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=${SONARQUBE_URL} \
-                        -Dsonar.login=${SONARQUBE_TOKEN}  // Use the token from Jenkins credentials
+                        -Dsonar.login=sqp_febce8fc5a1a953848d24f0d94279d85cc9ed4cd // Use the token from Jenkins credentials
                         """
                     }
                 }
