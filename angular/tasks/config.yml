@@ -7,6 +7,13 @@
     group: www-data
     mode: '0755'
 
+- name: Copy the Angular app artifact to the remote server
+  copy:
+    src: "/tmp/angular-devops-app-artifact-{{ VERSION }}.tar.gz"
+    dest: "/home/ubuntu/angular-devops-app-artifact-{{ VERSION }}.tar.gz"
+    mode: '0644'
+  when: build_output.stat.exists  # Ensure that the artifact exists on Jenkins agent
+
 - name: extract the angular app artifact from the remote server
   unarchive:
     src: "/home/ubuntu/angular-devops-app/angular-devops-app-artifact-{{ VERSION }}.tar.gz"
@@ -24,4 +31,10 @@
     src: "/var/www/html/{{ VERSION }}"
     dest: "/var/www/html/current"
     state: link
+
+- name: Clean up the artifact after deployment
+  file:
+    path: "/home/ubuntu/angular-devops-app-artifact-{{ VERSION }}.tar.gz"
+    state: absent
+  when: build_output.stat.exists  # Only remove if artifact exists
 ...

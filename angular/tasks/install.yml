@@ -92,4 +92,11 @@
   service:
     name: apache2
     state: restarted
+
+- name: Fetch the Angular artifact to Jenkins agent
+  fetch:
+    src: "/home/ubuntu/angular-devops-app/angular-devops-app-artifact-{{ VERSION }}.tar.gz"
+    dest: "/tmp/angular-devops-app-artifact-{{ VERSION }}.tar.gz"
+    flat: yes
+  when: build_output.stat.exists
 ...
