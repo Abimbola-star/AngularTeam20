@@ -50,22 +50,22 @@ pipeline {
         expression { return params.ROLLBACK_VERSION != '' }
     }
     steps {
-        // Ensure the directory exists and has proper permissions
+        // Ensure the directory exists and has proper permissions for the extracted files
         sh """
-            sudo chmod -R 775 /home/ubuntu/angular-devops-app
+            sudo mkdir -p /home/ubuntu/angular-devops-app
         """
-        // Download the artifact from S3
+        
+        // Extract the artifact from /tmp (where it's already downloaded)
         sh """
-            sudo aws s3 cp ${S3_BUCKET}/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz /home/ubuntu/angular-devops-app/ --region us-east-1
-        """
-
-        // Extract the artifact with proper permissions
-        sh """
-            sudo tar -xzvf /home/ubuntu/angular-devops-app/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz -C /home/ubuntu/angular-devops-app
+            sudo tar -xzvf /tmp/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz -C /tmp/
         """
 
+        // Move the extracted artifact from /tmp to the target directory
+        sh """
+            sudo mv /tmp/angular-devops-app/* /home/ubuntu/angular-devops-app/
+        """
 
-        // Deploy the previous artifact version
+        // Use Ansible playbook to set the correct permissions for the artifact
         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: 'SSH_KEY')]) {
             ansiblePlaybook(
                 playbook: '02-angular-app.yml',
@@ -78,9 +78,13 @@ pipeline {
                 ]
             )
         }
+
+        // Ensure proper ownership and permissions after moving the artifact (if needed)
+        sh """
+            sudo chown -R ubuntu:ubuntu /home/ubuntu/angular-devops-app/
+        """
     }
 }
-
         stage('Setup MariaDB') {
             steps {
                 script {
