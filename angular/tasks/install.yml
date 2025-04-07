@@ -1,4 +1,3 @@
----
 - name: Install dependencies (Node.js, npm, Angular CLI)
   apt:
     name:
@@ -13,7 +12,7 @@
    global: yes
    state: present
 
-- name: copy the angular root directory to the nodes
+- name: Copy the angular root directory to the nodes
   copy:
     src: angular-devops-app/
     dest: /home/ubuntu/angular-devops-app/
@@ -21,7 +20,7 @@
     group: www-data
     mode: "0755"
 
-- name: installing angular dependencies
+- name: Installing angular dependencies
   shell: npm install
   args:
     chdir: /home/ubuntu/angular-devops-app/
@@ -41,7 +40,7 @@
     msg: "The build directory /home/ubuntu/angular-devops-app/dist/angular-devops-app does not exist."
   when: not build_output.stat.exists
 
-- name: Debugging -Show build output directory content
+- name: Debugging - Show build output directory content
   shell: ls -l /home/ubuntu/angular-devops-app/dist/angular-devops-app/
   when: build_output.stat.exists
 
@@ -56,7 +55,7 @@
 
 - name: Set correct permissions for the artifact
   file:
-    path: "/home/ubuntu/angular-devops-app/angular-devops-app-artifact-{{ version }}.tar.gz"
+    path: "/home/ubuntu/angular-devops-app/angular-devops-app-artifact-{{ VERSION }}.tar.gz"
     owner: ubuntu
     group: ubuntu
     mode: '0644'
@@ -70,12 +69,11 @@
     mode: "0755"
     remote_src: yes
 
-- name: Set correct permissions for Apache, excluding symbolic links
+- name: Find all directories under Apache document root
   find:
     paths: "/var/www/html/"
     recurse: yes
     file_type: directory
-    patterns: "*"
   register: html_dirs
 
 - name: Set permissions for directories excluding symlinks
@@ -84,9 +82,8 @@
     owner: www-data
     group: www-data
     mode: "0755"
-  with_items: "{{ html_dirs.files }}"
-  when: item.path != '/var/www/html/current'
-
+  loop: "{{ html_dirs.files }}"
+  when: not item.islnk and item.path != '/var/www/html/current'  # Exclude symlinks and 'current' directory
 
 - name: Restart Apache
   service:
@@ -99,4 +96,3 @@
     dest: "/tmp/angular-devops-app-artifact-{{ VERSION }}.tar.gz"
     flat: yes
   when: build_output.stat.exists
-...
