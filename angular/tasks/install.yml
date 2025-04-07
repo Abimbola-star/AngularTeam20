@@ -54,6 +54,13 @@
     cmd: "tar -czvf /home/ubuntu/angular-devops-app/angular-devops-app-artifact-{{ VERSION }}.tar.gz -C /home/ubuntu/angular-devops-app/dist/ angular-devops-app"
   when: build_output.stat.exists
 
+- name: Set correct permissions for the artifact
+  file:
+    path: "/home/ubuntu/angular-devops-app/angular-devops-app-artifact-{{ version }}.tar.gz"
+    owner: ubuntu
+    group: ubuntu
+    mode: '0644'
+
 - name: Copy built Angular files to Apache document root
   copy:
     src: /home/ubuntu/angular-devops-app/dist/angular-devops-app/
