@@ -52,7 +52,7 @@ pipeline {
             steps {
                 // Download the artifact from S3
                 sh """
-                    aws s3 cp ${S3_BUCKET}/angular-app-${params.ROLLBACK_VERSION}.tar.gz /home/ubuntu/angular-devops-app/ --region us-east-1
+                    aws s3 cp ${S3_BUCKET}/angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz /home/ubuntu/angular-devops-app/ --region us-east-1
                 """
                 // Deploy the previous artifact version
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: 'SSH_KEY')]) {
@@ -61,7 +61,7 @@ pipeline {
                         inventory: 'hosts.ini',
                         extraVars: [
                             version: "${VERSION}",  // Ensure version is passed correctly
-                            artifactName: "angular-app-${params.ROLLBACK_VERSION}.tar.gz",  // Pass artifact name
+                            artifactName: "angular-devops-app-artifact-${params.ROLLBACK_VERSION}.tar.gz",  // Pass artifact name
                             ansible_ssh_private_key_file: "$SSH_KEY"  // Pass SSH key for rollback
                         ]
                     )
