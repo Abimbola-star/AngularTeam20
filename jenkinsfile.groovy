@@ -26,12 +26,11 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh """
-                        sonar-scanner \
-                        -Dsonar.projectKey=angular-devops-app-${VERSION} \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=${SONARQUBE_URL} \
-                        -Dsonar.token=${SONARQUBE_TOKEN} \
-                        -Dsonar.projectVersion=${VERSION}
+                  sonar-scanner \
+                 -Dsonar.projectKey=angular-devops-app \
+                 -Dsonar.sources=. \
+                 -Dsonar.host.url=http://18.213.2.225:9000 \
+                 -Dsonar.token=sqp_febce8fc5a1a953848d24f0d94279d85cc9ed4cd
                     """
                 }
             }
