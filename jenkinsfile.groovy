@@ -28,7 +28,7 @@ pipeline {
                         playbook: '02-angular-app.yml',
                         inventory: 'hosts.ini',
                         extraVars: [
-                            version: VERSION,
+                            version: "${VERSION}",  // Pass version as extra variable
                             ansible_ssh_private_key_file: "$SSH_KEY"  // Pass SSH key to Ansible
                         ]
                     )
@@ -54,14 +54,17 @@ pipeline {
                     aws s3 cp ${S3_BUCKET}/angular-app-${params.ROLLBACK_VERSION}.tar.gz . --region us-east-1
                 """
                 // Deploy the previous artifact version
-                ansiblePlaybook(
-                    playbook: '02-angular-app.yml',
-                    inventory: 'hosts.ini',
-                    extraVars: [
-                        artifactName: "angular-app-${params.ROLLBACK_VERSION}.tar.gz",
-                        ansible_ssh_private_key_file: "$SSH_KEY"  // Pass SSH key for rollback
-                    ]
-                )
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: 'SSH_KEY')]) {
+                    ansiblePlaybook(
+                        playbook: '02-angular-app.yml',
+                        inventory: 'hosts.ini',
+                        extraVars: [
+                            version: "${VERSION}",  // Ensure version is passed correctly
+                            artifactName: "angular-app-${params.ROLLBACK_VERSION}.tar.gz",  // Pass artifact name
+                            ansible_ssh_private_key_file: "$SSH_KEY"  // Pass SSH key for rollback
+                        ]
+                    )
+                }
             }
         }
 
@@ -69,13 +72,16 @@ pipeline {
             steps {
                 script {
                     // Optionally, set up MariaDB if needed
-                    ansiblePlaybook(
-                        playbook: '03-mariadb-and-api.yml',
-                        inventory: 'hosts.ini',
-                        extraVars: [
-                            ansible_ssh_private_key_file: "$SSH_KEY"  // Pass SSH key
-                        ]
-                    )
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: 'SSH_KEY')]) {
+                        ansiblePlaybook(
+                            playbook: '03-mariadb-and-api.yml',
+                            inventory: 'hosts.ini',
+                            extraVars: [
+                                version: "${VERSION}",  // Pass version for MariaDB setup
+                                ansible_ssh_private_key_file: "$SSH_KEY"  // Pass SSH key
+                            ]
+                        )
+                    }
                 }
             }
         }
@@ -83,10 +89,10 @@ pipeline {
 
     post {
         success {
-            echo "Build, SonarQube analysis, and deploy successful!"
+            echo "Build and deploy successful!"
         }
         failure {
-            echo "Build, SonarQube analysis, or deploy failed!"
+            echo "Build and deploy failed!"
         }
     }
 }

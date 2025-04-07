@@ -13,4 +13,4 @@ seed_data_file: "/tmp/seed_data.sql"
 # Apache user and group settings
 apache_user: "www-data"
 apache_group: "www-data"
-
+VERSION: "{{ lookup('env', 'BUILD_NUMBER') }}"

@@ -47,8 +47,17 @@
 
 - name: Create artifact (tar.gz) of the built Angular project
   command:
-    cmd: "tar -czvf /home/ubuntu/angular-devops-app/angular-devops-app-artifact.tar.gz -C /home/ubuntu/angular-devops-app/dist/ angular-devops-app"
+    cmd: "tar -czvf /home/ubuntu/angular-devops-app/angular-devops-app-artifact-{{ VERSION }}.tar.gz -C /home/ubuntu/angular-devops-app/dist/ angular-devops-app"
   when: build_output.stat.exists
+  register: artifact_creation
+  failed_when: artifact_creation.rc != 0
+  notify:
+    - Handle Artifact Creation Failure
+
+- name: Handle Artifact Creation Failure
+  debug:
+    msg: "Failed to create artifact tar.gz. Check the build output directory and ensure the Angular build was successful."
+  when: artifact_creation.rc != 0
 
 - name: Copy built Angular files to Apache document root
   copy:
