@@ -39,7 +39,7 @@ pipeline {
         stage('Archive Artifact') {
             steps {
                 sh """
-                    aws s3 cp ${ARTIFACT_NAME} ${S3_BUCKET}/${ARTIFACT_NAME} --region us-east-1
+                    aws s3 cp /home/ubuntu/angular-devops-app/${ARTIFACT_NAME} ${S3_BUCKET}/${ARTIFACT_NAME} --region us-east-1
                 """
             }
         }
