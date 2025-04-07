@@ -2,15 +2,14 @@ pipeline {
     agent any
 
     environment {
-        SCANNER_HOME = '/opt/sonar-scanner'
+        SCANNER_HOME = '/opt/sonar-scanner'  // Update with the correct path if needed
         VERSION = "${BUILD_NUMBER}"
         ARTIFACT_NAME = "angular-devops-app-artifact-${VERSION}.tar.gz"
         S3_BUCKET = 's3://ansible20-angular-app'
         SONARQUBE_URL = "http://18.213.2.225:9000/"
-        SONARQUBE_TOKEN = credentials('SonarQube_Token')  // Corrected variable name to match Jenkins credentials
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')  // You may need to add this if you're using AWS
-        PATH = "${PATH}:${SCANNER_HOME}/bin"
+        PATH = "${PATH}:${SCANNER_HOME}/bin"  // Add SonarQube Scanner to PATH
     }
 
     parameters {
@@ -23,22 +22,23 @@ pipeline {
                 checkout scm
             }
         }
-    }
+
         stage('SonarQube Analysis') {
             steps {
-               withCredentials([string(credentialsId: 'SonarQube_Token', variable: 'SONARQUBE_TOKEN')]) { 
-                withSonarQubeEnv('SonarQube_Token') {
-                    sh """
-                  sonar-scanner \
-                 -Dsonar.projectKey=angular-devops-app \
-                 -Dsonar.sources=. \
-                 -Dsonar.host.url=${SONARQUBE_URL}\
-                 -Dsonar.login=${SONARQUBE_TOKEN}
-                    """
+                withCredentials([string(credentialsId: 'SonarQube_Token', variable: 'SONARQUBE_TOKEN')]) {
+                    withSonarQubeEnv('SonarQube_Token') {  // Ensure SonarQube is configured in Jenkins
+                        sh """
+                        sonar-scanner \
+                        -Dsonar.projectKey=angular-devops-app \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=${SONARQUBE_URL} \
+                        -Dsonar.login=${SONARQUBE_TOKEN}  // Use the token from Jenkins credentials
+                        """
+                    }
                 }
             }
         }
-        
+
         stage('Build & Deploy') {
             steps {
                 ansiblePlaybook(
