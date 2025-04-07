@@ -13,6 +13,12 @@
     dest: "/var/www/html/{{ VERSION }}"
     remote_src: yes
 
+- name: Remove the old symlink (if it exists)
+  file:
+    path: "/var/www/html/current"
+    state: absent
+  ignore_errors: yes
+
 - name: Set up symlink to the latest version
   file:
     src: "/var/www/html/{{ VERSION }}"

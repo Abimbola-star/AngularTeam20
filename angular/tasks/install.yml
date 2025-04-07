@@ -63,13 +63,23 @@
     mode: "0755"
     remote_src: yes
 
-- name: set correct permissions for Apache
+- name: Set correct permissions for Apache, excluding symbolic links
+  find:
+    paths: "/var/www/html/"
+    recurse: yes
+    file_type: directory
+    patterns: "*"
+  register: html_dirs
+
+- name: Set permissions for directories excluding symlinks
   file:
-    path: "/var/www/html/"
+    path: "{{ item.path }}"
     owner: www-data
     group: www-data
-    recurse: yes
     mode: "0755"
+  with_items: "{{ html_dirs.files }}"
+  when: item.path != '/var/www/html/current'
+
 
 - name: Restart Apache
   service:
